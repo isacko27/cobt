@@ -73,36 +73,23 @@ class CoseviBot:
                 boton_acceder = WebDriverWait(self.driver, 10).until(
                     EC.presence_of_element_located((By.ID, 'botonAcceder')))
                 self.simular_scroll_y_mouse()
-                self.simular_scroll_y_mouse()
-                self.simular_scroll_y_mouse()
-                self.simular_scroll_y_mouse()
-                boton_acceder.click()
-                self.simular_scroll_y_mouse()
-                self.simular_scroll_y_mouse()
-                self.simular_scroll_y_mouse()
-                self.simular_scroll_y_mouse()
-                boton_acceder.click()
-                self.simular_scroll_y_mouse()
-                self.simular_scroll_y_mouse()
-                self.simular_scroll_y_mouse()
-                self.simular_scroll_y_mouse()
                 boton_acceder.click()
                 self.esperar_modal_desaparezca()
                 self.simular_scroll_y_mouse()
 
+                # Buscar y hacer clic en el botón "Si" si está presente
                 try:
-                    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "msg")))
-                    message = self.driver.find_element(By.CLASS_NAME, "msg").text
-                    if "Se detectó otra sesión activa, ¿desea continuar y cerrar la anterior?" in message:
-                        yes_button = self.driver.find_element(By.CLASS_NAME, "cancel")
-                        yes_button.click()
-                        self.esperar_modal_desaparezca()
-                        print("Se inició sesión correctamente")
-                    else:
-                        print("El mensaje de Se detectó otra sesión activa no fue encontrado")
-                except Exception as e:
-                    print("No se detectó otra sesión activa")
-                break
+                    boton_si = self.driver.find_element(By.CLASS_NAME, "cancel")
+                    boton_si.click()
+                    print("Se encontró y clickeó el botón 'Si'")
+                except:
+                    pass  # Si no se encuentra el botón "Si", simplemente continúa con el programa
+
+                # Esperar hasta que aparezca el enlace "Salir"
+                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(
+                    (By.XPATH, "//a[@class='encabezado-nombre-usuario encabezado-boton-salir']")))
+                print("Se inició sesión correctamente")
+                return
 
             except Exception as e:
                 print("Error al iniciar sesión:", e)
@@ -110,8 +97,12 @@ class CoseviBot:
                 if intentos < max_intentos:
                     print("Volviendo a intentar...")
                     time.sleep(5)
+                    continue
                 else:
                     print("Se alcanzó el número máximo de intentos. No se pudo iniciar sesión.")
+                    break
+        # Si se superó el número máximo de intentos, se vuelve a intentar la función de inicio de sesión
+        self.IniciarSesion(identificacion, contrasena, max_intentos)
 
     def ingresarRecibo(self, numero_recibo, clase_licencia):
         max_intentos = 3

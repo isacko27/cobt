@@ -28,10 +28,10 @@ while True:
         analizador.reemplazar_archivos()  # Pass tipo_cita as an argument
         analizador.actualizar_carpeta_update()
         # Esperar 6 horas antes de ejecutar nuevamente el bot
-        print("""=================================
-Esperando 30 minutos para volver a intentar
+        print(f"""=================================
+Esperando {interbalo / 60} minutos para volver a intentar
 =================================""")
-        time.sleep(30 * 60)  # 6 horas en segundos
+        time.sleep(interbalo)  #tiempo en segundos
 
     except Exception as e:
         print(f"Se produjo un error: {e}")
