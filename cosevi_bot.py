@@ -61,11 +61,11 @@ class CoseviBot:
                 WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.ID, "identificacion")))
                 identificacion_input = self.driver.find_element(By.ID, 'identificacion')
                 identificacion_input.send_keys(identificacion)
-
+                self.simular_scroll_y_mouse()
                 WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.ID, "contrasena")))
                 contrasena_input = self.driver.find_element(By.ID, 'contrasena')
                 contrasena_input.send_keys(contrasena)
-
+                self.simular_scroll_y_mouse()
                 boton_acceder = WebDriverWait(self.driver, 10).until(
                     EC.presence_of_element_located((By.ID, 'botonAcceder')))
                 boton_acceder.click()
@@ -151,6 +151,7 @@ class CoseviBot:
                     break
 
             if cede_encontrada:
+                self.simular_scroll_y_mouse()
                 cede_encontrada.click()
                 print(f"Se seleccionó la cede: {nombre_cede}")
 
