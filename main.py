@@ -7,7 +7,7 @@ from globalv import *
 
 while True:
     bot = CoseviBot()
-    analizador = AnalizadorFechas(tipo_cita)
+    analizador = AnalizadorFechas()
     try:
         bot.IniciarSesion(cedula, password)
         bot.ingresarRecibo(num_recibo, tipo_cita)
