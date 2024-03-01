@@ -1,14 +1,16 @@
 import time
 from cosevi_bot import CoseviBot
 from analizar_fechas import AnalizadorFechas
+from globalv import *
 
+# Define global variables
 
 while True:
     bot = CoseviBot()
-    analizador = AnalizadorFechas()
+    analizador = AnalizadorFechas(tipo_cita)
     try:
-        bot.IniciarSesion("118910588", "Pascal2$")
-        bot.ingresarRecibo("3258970209", "A2")
+        bot.IniciarSesion(cedula, password)
+        bot.ingresarRecibo(num_recibo, tipo_cita)
         bot.consultarCede("PASO ANCHO (EDUCACION VIAL)")
         bot.consultarCede("ALAJUELA")
         bot.consultarCede("CARTAGO")
@@ -23,7 +25,7 @@ while True:
         # bot.consultarCede("NICOYA")
         bot.CerrarSesion()
 
-        analizador.reemplazar_archivos()
+        analizador.reemplazar_archivos()  # Pass tipo_cita as an argument
         analizador.actualizar_carpeta_update()
         # Esperar 6 horas antes de ejecutar nuevamente el bot
         print("""=================================

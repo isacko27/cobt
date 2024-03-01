@@ -10,6 +10,7 @@ import time
 import re
 import os
 from openpyxl import Workbook
+import random
 
 class CoseviBot:
     def __init__(self):
@@ -32,16 +33,19 @@ class CoseviBot:
     def simular_scroll_y_mouse(self):
         try:
             # Simular scroll
-            pyautogui.scroll(10)
+            scroll_amount = random.randint(5, 20)  # Genera un valor aleatorio entre 5 y 20
+            pyautogui.scroll(scroll_amount)
 
             # Simular movimiento del mouse
             screen_width, screen_height = pyautogui.size()
-            pyautogui.moveTo(screen_width // 2, screen_height // 2)
-            pyautogui.moveRel(0, 50, duration=0.5)  # Mover el mouse hacia abajo
-            pyautogui.moveRel(0, -50, duration=0.5)  # Mover el mouse hacia arriba
+            center_x = screen_width // 2
+            center_y = screen_height // 2
+            move_x = random.randint(-100, 100)  # Genera un valor aleatorio entre -100 y 100
+            move_y = random.randint(-100, 100)  # Genera un valor aleatorio entre -100 y 100
+            pyautogui.moveTo(center_x + move_x, center_y + move_y, duration=random.uniform(0.1, 0.5))  # Duración aleatoria entre 0.1 y 0.5 segundos
 
         except Exception as e:
-            print("Error al simular scroll y movimiento del mouse:", e)
+            print("Error al simular scroll, movimiento del mouse o clic:", e)
 
     def esperar_modal_desaparezca(self):
         try:
@@ -68,6 +72,7 @@ class CoseviBot:
                 self.simular_scroll_y_mouse()
                 boton_acceder = WebDriverWait(self.driver, 10).until(
                     EC.presence_of_element_located((By.ID, 'botonAcceder')))
+                boton_acceder.click()
                 boton_acceder.click()
                 self.esperar_modal_desaparezca()
                 self.simular_scroll_y_mouse()

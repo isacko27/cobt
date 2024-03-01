@@ -4,15 +4,15 @@ from openpyxl import load_workbook
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from globalv import *
 
-
-class AnalizadorFechas:
+class AnalizadorFechas():
     def __init__(self, citas_folder="citas", update_folder="citas/update"):
         self.citas_folder = citas_folder
         self.update_folder = update_folder
         self.email_sender = 'hervosoisaac@gmail.com'
         self.email_password = 'wptl madg hrjo yfwt'
-        self.email_receiver = 'isaachervoso1@gmail.com'
+        self.email_receiver = 'citasbotcosevi@gmail.com'
 
     def leer_fechas_excel(self, file_path):
         try:
@@ -98,7 +98,7 @@ class AnalizadorFechas:
                                 mensaje = f"Nuevas citas extraordinarias en {sede}:<br>"
                                 for fecha in fechas_nuevas:
                                     mensaje += f"- {fecha}<br>"
-                                self.enviar_correo(f"{sede} Nuevas citas extraordinarias", mensaje, sede)
+                                self.enviar_correo(f"({tipo_cita}) {sede} Nuevas citas extraordinarias", mensaje, sede)
                             else:
                                 print("No se encontraron citas extraordinarias nuevas.")
                         else:
