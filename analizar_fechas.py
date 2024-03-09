@@ -12,7 +12,7 @@ class AnalizadorFechas():
         self.update_folder = update_folder
         self.email_sender = 'hervosoisaac@gmail.com'
         self.email_password = 'wptl madg hrjo yfwt'
-        self.email_receiver = 'citasbotcosevi@gmail.com'
+        self.email_receivers = email_receivers
 
     def leer_fechas_excel(self, file_path):
         try:
@@ -36,7 +36,6 @@ class AnalizadorFechas():
             # Crear mensaje en formato HTML
             msg = MIMEMultipart()
             msg['From'] = self.email_sender
-            msg['To'] = self.email_receiver
             msg['Subject'] = subject
 
             # Estilos CSS para el botón
@@ -57,8 +56,12 @@ class AnalizadorFechas():
                     """
             msg.attach(MIMEText(mensaje_html, 'html'))
 
+            # Agregar destinatarios al campo "To"
+            msg['To'] = ', '.join(self.email_receivers)
+
             # Enviar correo electrónico
-            server.sendmail(self.email_sender, self.email_receiver, msg.as_string())
+            server.sendmail(self.email_sender, self.email_receivers, msg.as_string())
+
             print("Correo electrónico enviado exitosamente.")
 
             # Cerrar conexión

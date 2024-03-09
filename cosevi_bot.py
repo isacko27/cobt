@@ -5,7 +5,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 import pyautogui
-from datetime import datetime, timedelta
 import time
 import re
 import os
@@ -13,23 +12,10 @@ from openpyxl import Workbook
 import random
 
 class CoseviBot:
-    def __init__(self):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        chrome_driver_path = os.path.join(current_dir, 'chromedriver.exe')
-
-        options = ChromeOptions()
-        options.add_argument("--disable-gpu")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-extensions")
-        options.add_argument("--disable-dev-shm-usage")
-
-        user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.109 Safari/537.36'
-        options.add_argument(f"user-agent={user_agent}")
-
-        self.driver = Chrome(options=options, executable_path=chrome_driver_path)
+    def __init__(self, driver):
+        self.driver = driver
         self.anos_fechas = {}
         self.cede = ""
-
     def simular_scroll_y_mouse(self):
         try:
             # Simular scroll
@@ -47,6 +33,19 @@ class CoseviBot:
         except Exception as e:
             print("Error al simular scroll, movimiento del mouse o clic:", e)
 
+    def debug(self):
+        try:
+            print("Iniciando modo de depuración...")
+
+            # Esperar 2 minutos
+            time.sleep(1200)
+
+            print("Continuando con el código...")
+            # Continuar con el resto del código aquí...
+
+        except Exception as e:
+            print("Error en el modo de depuración:", e)
+
     def esperar_modal_desaparezca(self):
         try:
             WebDriverWait(self.driver, 10).until(
@@ -60,8 +59,29 @@ class CoseviBot:
         intentos = 0
         while intentos < max_intentos:
             try:
-                self.driver.get('https://servicios.educacionvial.go.cr/Formularios/IngresarCuenta')
+                self.debug()
+                self.driver.get('https://www.google.com')
+
+                # Esperar a que aparezca el enlace
+                WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, "//h3[contains(text(), 'https://www.educacionvial.go.cr/Proc-Req/Prácticos')]")))
+
+                # Hacer clic en el enlace
+                enlace = self.driver.find_element(By.XPATH,
+                                                  "//h3[contains(text(), 'https://www.educacionvial.go.cr/Proc-Req/Prácticos')]")
+                enlace.click()
+
+                # Hacer clic en el enlace "clic aquí"
+                enlace_clic_aqui = self.driver.find_element(By.XPATH,
+                                                            "//a[contains(@href, 'http://servicios.educacionvial.go.cr/Formularios/MatriculaPruebaPractica')]")
+                enlace_clic_aqui.click()
+
+                self.debug()
+
                 self.simular_scroll_y_mouse()
+                self.simular_scroll_y_mouse()
+                time.sleep(2)  # Agregar un pequeño retraso antes de ingresar la identificación y contraseña
                 WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.ID, "identificacion")))
                 identificacion_input = self.driver.find_element(By.ID, 'identificacion')
                 identificacion_input.send_keys(identificacion)
@@ -69,6 +89,7 @@ class CoseviBot:
                 WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.ID, "contrasena")))
                 contrasena_input = self.driver.find_element(By.ID, 'contrasena')
                 contrasena_input.send_keys(contrasena)
+                time.sleep(2)  # Agregar un pequeño retraso antes de hacer clic en el botón de acceso
                 self.simular_scroll_y_mouse()
                 boton_acceder = WebDriverWait(self.driver, 10).until(
                     EC.presence_of_element_located((By.ID, 'botonAcceder')))
@@ -77,19 +98,7 @@ class CoseviBot:
                 self.esperar_modal_desaparezca()
                 self.simular_scroll_y_mouse()
 
-                # Buscar y hacer clic en el botón "Si" si está presente
-                try:
-                    boton_si = self.driver.find_element(By.CLASS_NAME, "cancel")
-                    boton_si.click()
-                    print("Se encontró y clickeó el botón 'Si'")
-                except:
-                    pass  # Si no se encuentra el botón "Si", simplemente continúa con el programa
-
-                # Esperar hasta que aparezca el enlace "Salir"
-                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(
-                    (By.XPATH, "//a[@class='encabezado-nombre-usuario encabezado-boton-salir']")))
-                print("Se inició sesión correctamente")
-                return
+                # Resto del código...
 
             except Exception as e:
                 print("Error al iniciar sesión:", e)

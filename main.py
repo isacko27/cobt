@@ -1,40 +1,43 @@
+from undetected_chromedriver import Chrome, ChromeOptions
 import time
 from cosevi_bot import CoseviBot
 from analizar_fechas import AnalizadorFechas
 from globalv import *
+from bypass import Bypass
 
-# Define global variables
+
+# Inicia sesión en Google
+bypass_instance = Bypass()
+bypass_instance.google_login(gemail, gpasswd)
+driver = bypass_instance.driver  # Usa el mismo driver de Bypass
+
+# Crea una instancia de CoseviBot y pasa el driver
+bot = CoseviBot(driver)
 
 while True:
-    bot = CoseviBot()
-    analizador = AnalizadorFechas()
     try:
+        # bot.debug()
         bot.IniciarSesion(cedula, password)
         bot.ingresarRecibo(num_recibo, tipo_cita)
         bot.consultarCede("PASO ANCHO (EDUCACION VIAL)")
         bot.consultarCede("ALAJUELA")
         bot.consultarCede("CARTAGO")
-        # bot.consultarCede("GUAPILES")
+        bot.consultarCede("GUAPILES")
+        bot.consultarCede("RIO CLARO")
         bot.consultarCede("HEREDIA")
-        # bot.consultarCede("LIMON")
-        # bot.consultarCede("LIBERIA")
         bot.consultarCede("SAN RAMON")
         bot.consultarCede("SAN CARLOS")
-        # bot.consultarCede("PUNTARENAS")
-        # bot.consultarCede("PEREZ ZELEDON")
-        # bot.consultarCede("NICOYA")
-        bot.CerrarSesion()
 
-        analizador.reemplazar_archivos()  # Pass tipo_cita as an argument
+        analizador = AnalizadorFechas()
+        analizador.reemplazar_archivos()
         analizador.actualizar_carpeta_update()
-        # Esperar 6 horas antes de ejecutar nuevamente el bot
+
         print(f"""=================================
 Esperando {interbalo / 60} minutos para volver a intentar
 =================================""")
-        time.sleep(interbalo)  #tiempo en segundos
+        time.sleep(interbalo)
 
     except Exception as e:
         print(f"Se produjo un error: {e}")
         print("Reiniciando el proceso...")
-        bot.CerrarSesion()  # Cerrar el driver actual
-        bot = CoseviBot()   # Crear una nueva instancia de CoseviBot
+        bot.CerrarSesion()
