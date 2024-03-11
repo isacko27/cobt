@@ -1,4 +1,3 @@
-from undetected_chromedriver import Chrome, ChromeOptions
 import time
 from cosevi_bot import CoseviBot
 from analizar_fechas import AnalizadorFechas
@@ -6,31 +5,37 @@ from globalv import *
 from bypass import Bypass
 
 
-# Inicia sesión en Google
 bypass_instance = Bypass()
-bypass_instance.google_login(gemail, gpasswd)
-driver = bypass_instance.driver  # Usa el mismo driver de Bypass
+analizador = AnalizadorFechas()
 
-# Crea una instancia de CoseviBot y pasa el driver
+# Inicia sesión en Google
+#bypass_instance.google_login(gemail, gpasswd)
+bypass_instance.google_login_debug()
+driver = bypass_instance.get_driver()  # Obtener el controlador desde Bypass
+# Crea una instancia de CoseviBot y pasa el controlador
 bot = CoseviBot(driver)
 
 while True:
     try:
-        # bot.debug()
-        bot.IniciarSesion(cedula, password)
+
+        # Iniciando Sesion en Cosevi
+        bot.IniciarSesion(cedula, password, tipo_identificacion)
         bot.ingresarRecibo(num_recibo, tipo_cita)
         bot.consultarCede("PASO ANCHO (EDUCACION VIAL)")
         bot.consultarCede("ALAJUELA")
         bot.consultarCede("CARTAGO")
         bot.consultarCede("GUAPILES")
-        bot.consultarCede("RIO CLARO")
         bot.consultarCede("HEREDIA")
-        bot.consultarCede("SAN RAMON")
+        bot.consultarCede("LIBERIA")
+        # bot.consultarCede("LIMON")
+        # bot.consultarCede("NICOYA")
+        # bot.consultarCede("PEREZ ZELEDON")
+        # bot.consultarCede("PUNTARENAS")
+        # bot.consultarCede("RIO CLARO")
         bot.consultarCede("SAN CARLOS")
-
-        analizador = AnalizadorFechas()
-        analizador.reemplazar_archivos()
-        analizador.actualizar_carpeta_update()
+        bot.consultarCede("SAN RAMON")
+        bot.cerrar_sesion()
+        bot.Restart()
 
         print(f"""=================================
 Esperando {interbalo / 60} minutos para volver a intentar
@@ -39,5 +44,6 @@ Esperando {interbalo / 60} minutos para volver a intentar
 
     except Exception as e:
         print(f"Se produjo un error: {e}")
+        analizador.enviar_correo_error()
         print("Reiniciando el proceso...")
-        bot.CerrarSesion()
+        bot.Restart()

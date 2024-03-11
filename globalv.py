@@ -1,15 +1,16 @@
-cedula = "118910588"
-password = "Pascal2$"
-num_recibo = "3258970209"
-tipo_cita = "A2"
-interbalo = 8 * 60 #8 Minutos
+cedula = "155827920124 "
+password = "Ula124Stev"
+num_recibo = "3982545409"
+tipo_cita = "B1"
+interbalo = 10 * 60 #10 Minutos
 
 email_receivers = ['citasbotcosevi@gmail.com']
-gemail= "isaachervoso1@gmail.com"
-gpasswd= "Pascal2$2"
 
 
-tipo_identificacion = "CI"
+gemail = ""
+gpasswd = ""
+
+tipo_identificacion = "DM"
 # Tipos de identificacion
 # Apatriada (AP)
 # Func. Administrativo (CA)
